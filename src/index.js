@@ -3,11 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'antd/dist/antd.css'
+import { ConfigProvider } from 'antd';
+import enUS from 'antd/lib/locale/en_US';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <ConfigProvider locale={enUS}>
     <App />
+    </ConfigProvider>
   </React.StrictMode>
 );
 

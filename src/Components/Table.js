@@ -1,91 +1,101 @@
-import { Space, Table, Tag } from "antd";
-import React from "react";
-const columns = [
-  {
-    title: "Title",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
+import {
+  CaretRightOutlined,
+  CheckOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FastForwardFilled,
+} from "@ant-design/icons";
+import { Table, Tooltip } from "antd";
+import React, { useState } from "react";
 
-  {
-    title: "Status",
-    dataIndex: "Status",
-    key: "1",
-  },
-  {
-    title: "Description",
-    dataIndex: "address",
-    key: "address",
-  },
+const AppTable = ({ datasource, onEditClickHandler, onDeleteClickHandler }) => {
+  const [status, setStatus] = useState("pending");
 
-  {
-    title: "Created At",
-    dataIndex: "name",
-    key: "name",
-  },
+  const columns = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Description",
+      dataIndex: "Description",
+      key: "Description",
+    },
 
-  {
-    title: "Due Date",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
+    {
+      title: "CreatedAt",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
 
-          if (tag === "loser") {
-            color = "volcano";
-          }
+    {
+      title: "DueDate",
+      dataIndex: "DueDate",
+      key: "DueDate",
+    },
 
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: () => (
-      <Space size="middle">
-        <a>Edit </a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    Status: "Pending...",
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
+    {
+      title: "Tags",
+      dataIndex: "Tag",
+      key: "Tag",
+    },
 
-const AppTable = () => <Table columns={columns} dataSource={data} />;
+    {
+      title: "Actions",
+      key: "Actions",
+      render: (record) => {
+        console.log("record", record);
+        return (
+          <>
+            <EditOutlined
+              style={{ color: "blue", marginRight: "25px", fontSize: "20px" }}
+              onClick={() =>
+                onEditClickHandler(
+                  record.title,
+                  record.Description,
+                  record.DueDate,
+                  record.Tag
+                )
+              }
+            />
+            <DeleteOutlined
+              style={{ color: "red", marginRight: "25px", fontSize: "20px" }}
+              onClick={() => onDeleteClickHandler(record)}
+            />
+            {status == "pending" ? (
+              <Tooltip title={"pending"}>
+                <CaretRightOutlined
+                  onClick={() => setStatus("progress")}
+                  style={{ fontSize: "20px" }}
+                />
+              </Tooltip>
+            ) : status === "progress" ? (
+              <Tooltip title={"Progress"}>
+                <FastForwardFilled
+                  onClick={() => setStatus("Done")}
+                  style={{ fontSize: "20px" }}
+                />
+              </Tooltip>
+            ) : status === "Done" ? (
+              <Tooltip title={"Done"}>
+                <CheckOutlined style={{ fontSize: "20px" }} />
+              </Tooltip>
+            ) : null}
+          </>
+        );
+      },
+    },
+  ];
+  return (
+    <>
+      <Table
+        columns={columns}
+        dataSource={datasource}
+        pagination={true}
+      />
+    </>
+  );
+};
+
 export default AppTable;
